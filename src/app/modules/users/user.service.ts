@@ -7,6 +7,7 @@ import encryptionOperation from "../../../util/encryptionOperation";
 import config from "../../../config";
 import { IPaginatinQuery } from "../../../interfaces/common";
 import { IResponseType } from "../../../helpers/responseReturn";
+import { JwtPayload } from "jsonwebtoken";
 
 
 class UserService {
@@ -33,7 +34,7 @@ class UserService {
             throw new ApiError(httpStatus.BAD_REQUEST, "Failed to Verify OTP")
         }
         // const decodedToken = jwtHelpers.verifyToken(token, config?.jwt_secret as string);
-        const decodedToken: any = this.jwt.verifyToken(token);
+        const decodedToken: string | JwtPayload = this.jwt.verifyToken(token) as JwtPayload;
         // check if token is valid or not
         if (!decodedToken) {
             throw new ApiError(httpStatus.BAD_REQUEST, "Failed to Verify OTP")
@@ -70,7 +71,7 @@ class UserService {
     async getAllUser(pagination: IPaginatinQuery): Promise<IResponseType<IUser[]>> {
         const { limit, page, filter } = pagination;
         const skip = limit * (page - 1);
-        const query: Record<string, any> = {};
+        const query: Record<string, unknown> = {};
         if (filter?.role) {
             query.$and = [{ role: filter.role }]
         }
@@ -118,7 +119,7 @@ class UserService {
                 throw new ApiError(httpStatus.CONFLICT, 'Failed to verify user!')
             }
             // const decodedToken = jwtHelpers.verifyToken(token, config?.jwt_secret as string);
-            const decodedToken: any = this.jwt.verifyToken(token);
+            const decodedToken: string | JwtPayload = this.jwt.verifyToken(token) as JwtPayload;
             if (!decodedToken) {
                 throw new ApiError(httpStatus.CONFLICT, 'Failed to verify user!')
             }

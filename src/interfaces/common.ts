@@ -14,3 +14,12 @@ export type IGenericErrorResponse = {
   message: string;
   errorMessages: IGenericErrorMessage[];
 };
+
+export type IPaginatinQuery = {
+  page: number;
+  limit: number;
+  filter?: Record<string, unknown>;
+  search?: string;
+  sort?: string;
+  select?: string;
+};

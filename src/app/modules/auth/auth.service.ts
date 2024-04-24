@@ -9,6 +9,7 @@ import User from "../users/user.model";
 import encryptionOperation from "../../../util/encryptionOperation";
 import OtpEmailTemplate from "../../../helpers/emailTemplate/otpEmailTemplate";
 import { IUser } from "../users/user.interface";
+import { JwtPayload } from "jsonwebtoken";
 
 class AuthService {
     jwtSecret: string;
@@ -86,18 +87,13 @@ class AuthService {
 
 
 
-        const isExist = await User.findOne({ $or: [{ email: payload?.email }, { phone: payload?.phone }] })
-
-        if (!isExist) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "User Not Found")
-        }
-
-        const decodedToken: { email: string, phoneNumber: string, provider: string, otp: number } = this.jwt.verifyToken(token);
+        const decodedToken: string | JwtPayload = this.jwt.verifyToken(token);
 
         // check if token is valid or not
-        if (!decodedToken) {
-            throw new ApiError(httpStatus.BAD_REQUEST, "Failed to Verify OTP")
+        if (!decodedToken || typeof decodedToken === 'string') {
+            throw new ApiError(httpStatus.BAD_REQUEST, "Failed to Verify OTP");
         }
+
         const { email, phoneNumber, provider, otp } = decodedToken;
         // check if email or phone number is same or not
 
@@ -136,7 +132,7 @@ class AuthService {
 
     }
 
-    resetPassword = async (payload: { password: string, confirmPassword: string }, user: { role: string, userId: string }) => {
+    resetPassword = async (payload: { password: string, confirmPassword: string }, user: JwtPayload | { userId: string }) => {
         const isExist = await User.findOne({ _id: user?.userId })
         if (!isExist) {
             throw new ApiError(httpStatus.BAD_REQUEST, "User Not Found")
@@ -153,7 +149,7 @@ class AuthService {
     }
 
     async tokenLogin(payload: string) {
-        const decodedToken: { role: string, userId: string } = this.jwt.verifyToken(payload);
+        const decodedToken: string | JwtPayload = this.jwt.verifyToken(payload) as JwtPayload;
 
         if (!decodedToken) {
             throw new ApiError(httpStatus.BAD_REQUEST, "Invalid Token")

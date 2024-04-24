@@ -5,6 +5,7 @@ import responseReturn from "../../../helpers/responseReturn";
 import { IUser } from "../users/user.interface";
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
+import { JwtPayload } from "jsonwebtoken";
 
 class AuthController {
 
@@ -60,7 +61,7 @@ class AuthController {
     })
 
     resetPassword = catchAsync(async (req: Request, res: Response) => {
-        const result = await authService.resetPassword(req.body, req?.user);
+        const result = await authService.resetPassword(req.body, req?.user as JwtPayload);
         responseReturn<IUser | null>(res, {
             success: true,
             message: "password reset successfully",

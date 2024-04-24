@@ -27,4 +27,14 @@ export default {
     aws_email_user: process.env.AWS_EMAIL_USER,
     aws_email_pass: process.env.AWS_EMAIL_PASS,
     aws_email_host: process.env.AWS_EMAIL_HOST,
+
+    // sms configuration
+    sms_api: process.env.SMS_API,
+    sms_api_user: process.env.SMS_API_USER,
+    sms_api_password: process.env.SMS_API_PASSWORD,
+    sms_api_sender_id: process.env.SMS_API_SENDER_ID,
+    sms_api_type: process.env.SMS_API_TYPE,
+
+
+
 }
