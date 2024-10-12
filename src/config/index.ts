@@ -1,8 +1,20 @@
 import * as dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({
-    path: path.join(process.cwd(), '.env')
-});
+
+
+// dotenv.config({
+//     path: path.join(process.cwd(), '.env')
+// });
+
+// Load environment variables based on the current environment
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: path.join(process.cwd(), '.env') });
+} else {
+    console.log('Loading local environment variables');
+    dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+}
+
+
 export default {
     project_name: process.env.PROJECT_NAME || 'cap-product-service',
     port: process.env.PORT || 5000,
@@ -34,7 +46,5 @@ export default {
     sms_api_password: process.env.SMS_API_PASSWORD,
     sms_api_sender_id: process.env.SMS_API_SENDER_ID,
     sms_api_type: process.env.SMS_API_TYPE,
-
-
 
 }

@@ -12,6 +12,7 @@ process.on('uncaughtException', (error: Error) => {
 }
 );
 
+
 const startServer = async () => {
     try {
         // database connnection initialization
