@@ -29,6 +29,7 @@
     "@types/cookie-parser": "^1.4.6",
     "@types/mongoose": "^5.11.97",
     "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
