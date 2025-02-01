@@ -28,6 +28,19 @@ router
     ]),
     userController.updateUser
   );
+
+router
+  .route("/:id")
+  .delete(
+    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
+    userController.deleteUser
+  )
+
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.SUPER_ADMIN),
+    userController.updateUserAdmin
+  );
+
 router.route("/create").post(
   upload.fields([
     {

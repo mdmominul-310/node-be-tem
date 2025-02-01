@@ -211,6 +211,14 @@ class UserService extends ServiceModel {
   async getUser(id: string): Promise<IUser | null> {
     return this.user.findById(id);
   }
+
+  async deleteUser(id: string): Promise<IUser | null> {
+    return this.user.findByIdAndDelete(id);
+  }
+
+  async upDateUserAdmin(payload: IUser, id: string): Promise<IUser | null> {
+    return this.user.findByIdAndUpdate(id, payload, { new: true });
+  }
 }
 
 const userService = new UserService(User);
