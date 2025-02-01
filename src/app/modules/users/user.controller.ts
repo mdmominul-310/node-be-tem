@@ -183,6 +183,28 @@ class UserController {
       data: result,
     });
   });
+
+  deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const result = await this.userService.delete(req.params.id);
+    responseReturn(res, {
+      success: true,
+      message: "User Deleted Successfully",
+      data: result,
+    });
+  });
+
+  updateUserAdmin = catchAsync(async (req: Request, res: Response) => {
+    const { ...restData } = req.body;
+    const result = await this.userService.upDateUserAdmin(
+      restData,
+      req.params.id
+    );
+    responseReturn<IUser>(res, {
+      message: "User updatedsuccessfully",
+      data: result,
+      success: true,
+    });
+  });
 }
 
 const userController = new UserController();
