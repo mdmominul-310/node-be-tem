@@ -4,7 +4,7 @@ import smsEmailTransporter from "../../../helpers/smsEmailTransporter";
 const sendEmail = async (req: Request, res: Response) => {
   const { sendEmail } = smsEmailTransporter;
   const result = await sendEmail({
-    to: "mdmominulislam310@gmail.com",
+    to: req.body.to,
     subject: req.body.subject,
     message: req.body.message,
   });
