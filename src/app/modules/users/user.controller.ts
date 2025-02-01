@@ -93,8 +93,19 @@ class UserController {
   });
 
   createUser = catchAsync(async (req: Request, res: Response) => {
-    // const result = await authService.createUser(req.body, req.cookies?.otv);
-    const result = await this.userService.create(req.body, req.cookies?.otv);
+    if (!req?.body?.data) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "payload is required");
+    }
+    const payload = JSON.parse(req?.body?.data);
+    const profileFile = Array.isArray(req.files)
+      ? req.files[0]
+      : req.files?.profile?.[0];
+
+    if (profileFile) {
+      const profileImage = await this.userService.uploadFile(profileFile);
+      payload.profileImage = profileImage;
+    }
+    const result = await this.userService.create(payload, req.cookies?.otv);
     if (result) {
       await this.transporter.sendEmail({
         to: result.email,
@@ -137,10 +148,21 @@ class UserController {
     });
   });
   updateUser = catchAsync(async (req: Request, res: Response) => {
-    const { ...restData } = req.body;
+    if (!req?.body?.data) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "payload is required");
+    }
+    const payload = JSON.parse(req?.body?.data);
+    const profileFile = Array.isArray(req.files)
+      ? req.files[0]
+      : req.files?.profile?.[0];
+    if (profileFile) {
+      const profileImage = await this.userService.uploadFile(profileFile);
+      payload.profileImage = profileImage;
+    }
+
     const token = req?.cookies?.otv;
     const UserId: string = req?.user?.userId as string;
-    const result = await this.userService.update(restData, UserId, token);
+    const result = await this.userService.update(payload, UserId, token);
     responseReturn<IUser>(res, {
       message: "User updated successfully",
       data: result,

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { userRoutes } from "../modules/users/user.routes";
 import { authRoutes } from "../modules/auth/auth.routes";
 import { AddressRooutes } from "../modules/address/address.routes";
+import { sendEmailRouter } from "../modules/send-email/send-email.controller";
 
 const router = Router();
 const moduleRoutes = [
@@ -16,6 +17,10 @@ const moduleRoutes = [
   {
     path: "/address",
     route: AddressRooutes,
+  },
+  {
+    path: "/send-email",
+    route: sendEmailRouter,
   },
 ];
 
