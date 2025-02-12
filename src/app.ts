@@ -7,6 +7,10 @@ import MainRoutes from "./app/routes/mainRoutes";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import helmet from "helmet";
 import logger from "morgan";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
+import { JwtPayload } from "jsonwebtoken";
 dotenv.config();
 
 const app: Express = express();
@@ -46,6 +50,40 @@ const options: RequestHandler[] = [
 ];
 
 app.use(...options);
+// make session
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Google OAuth Strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID:
+        "185721420608-bof6urgsp7jltdkjbelr5mstkpn6l5oq.apps.googleusercontent.com",
+      clientSecret: "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",
+      callbackURL: "http://localhost:5000/api/v1/auth/login/google/callback",
+    },
+    async (_accessToken, _refreshToken, profile: Profile, done) => {
+      return done(null, profile);
+    }
+  )
+);
+
+// Serialize & Deserialize User
+passport.serializeUser((user: JwtPayload, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj: never, done) => {
+  done(null, obj);
+});
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1/", MainRoutes);

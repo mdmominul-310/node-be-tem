@@ -8,7 +8,7 @@ class BlogController {
   createBlog = catchAsync(async (req: Request, res: Response) => {
     const blog = await this.blogService.createBlog(
       JSON.parse(req.body.data),
-      req.user?.userId,
+      req.user?.userId as string,
       (req.files as { [fieldname: string]: Express.Multer.File[] })?.banner?.[0]
     );
     this.blogService.Response(res, {
