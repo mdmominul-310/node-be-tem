@@ -17,7 +17,7 @@ const userSchema = new Schema<IUser, Usermodel>({
   },
   phone: {
     type: String,
-    required: true,
+    required: false,
   },
   phoneNumberVerified: {
     type: Boolean,

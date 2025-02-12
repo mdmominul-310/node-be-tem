@@ -5,86 +5,92 @@ import catchAsync from "../../../helpers/catchAsync";
 import responseReturn from "../../../helpers/responseReturn";
 
 const createAddress = catchAsync(async (req: Request, res: Response) => {
-    const userId = req?.user?.userId
-    const address = {
-        ...req.body,
-        user: userId
-    }
-    const result = await AddressService.createAddress(address);
+  const userId = req?.user?.userId;
+  const address = {
+    ...req.body,
+    user: userId,
+  };
+  const result = await AddressService.createAddress(address);
 
-    responseReturn<IAddress>(res, {
-        success: true,
-        data: result,
-        message: 'Address created successfully'
-    })
-})
+  responseReturn<IAddress>(res, {
+    success: true,
+    data: result,
+    message: "Address created successfully",
+  });
+});
 
 const getAddresses = catchAsync(async (req: Request, res: Response) => {
-    const userId = req?.user?.userId
-    const result = await AddressService.getAddresses(userId);
+  const userId = req?.user?.userId;
+  const result = await AddressService.getAddresses(userId as string);
 
-    responseReturn<IAddress[]>(res, {
-        success: true,
-        data: result,
-        message: 'Addresses fetched successfully'
-    })
-})
+  responseReturn<IAddress[]>(res, {
+    success: true,
+    data: result,
+    message: "Addresses fetched successfully",
+  });
+});
 
 const getAddress = catchAsync(async (req: Request, res: Response) => {
-    const addressId = req.params.id;
-    const result = await AddressService.getAddress(addressId);
+  const addressId = req.params.id;
+  const result = await AddressService.getAddress(addressId);
 
-    responseReturn<IAddress>(res, {
-        success: true,
-        data: result,
-        message: 'Address fetched successfully'
-    })
-})
+  responseReturn<IAddress>(res, {
+    success: true,
+    data: result,
+    message: "Address fetched successfully",
+  });
+});
 
 const getDefaultAddress = catchAsync(async (req: Request, res: Response) => {
-    const userId = req?.user?.userId
-    const result = await AddressService.getDefaultAddress(userId);
+  const userId = req?.user?.userId;
+  const result = await AddressService.getDefaultAddress(userId as string);
 
-    responseReturn<IAddress>(res, {
-        success: true,
-        data: result,
-        message: 'Address fetched successfully'
-    })
-})
-
+  responseReturn<IAddress>(res, {
+    success: true,
+    data: result,
+    message: "Address fetched successfully",
+  });
+});
 
 const updateAddress = catchAsync(async (req: Request, res: Response) => {
-    const userId = req?.user?.userId
-    const addressId = req.params.id;
-    const address = req.body;
-    const result = await AddressService.updateAddress(addressId, userId, address);
+  const userId = req?.user?.userId;
+  const addressId = req.params.id;
+  const address = req.body;
+  const result = await AddressService.updateAddress(
+    addressId,
+    userId as string,
+    address
+  );
 
-    responseReturn<IAddress>(res, {
-        success: true,
-        data: result,
-        message: 'Address updated successfully'
-    })
-})
+  responseReturn<IAddress>(res, {
+    success: true,
+    data: result,
+    message: "Address updated successfully",
+  });
+});
 
 const deleteAddress = catchAsync(async (req: Request, res: Response) => {
-    const userId = req?.user?.userId
-    const addressId = req.params.id;
-    const result = await AddressService.deleteAddress(addressId, userId);
+  const userId = req?.user?.userId;
+  const addressId = req.params.id;
+  const result = await AddressService.deleteAddress(
+    addressId,
+    userId as string
+  );
 
-    responseReturn<IAddress>(res, {
-        success: true,
-        data: result,
-        message: 'Address deleted successfully'
-    })
-})
+  responseReturn<IAddress>(res, {
+    success: true,
+    data: result,
+    message: "Address deleted successfully",
+  });
+});
 
 const AddressController = {
-    createAddress,
-    getAddresses,
-    getAddress,
-    getDefaultAddress,
-    updateAddress,
-    deleteAddress
-}
+  createAddress,
+  getAddresses,
+  getAddress,
+  getDefaultAddress,
+  updateAddress,
+  deleteAddress,
+};
 
 export default AddressController;
