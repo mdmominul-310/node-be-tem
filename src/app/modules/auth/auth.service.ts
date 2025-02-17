@@ -73,36 +73,56 @@ class AuthService {
     }
   }
 
-  async login(payload: {
-    email: string;
-    phoneNumber: string;
+   async login(payload: {
+    email?: string;
+    phoneNumber?: string;
     password: string;
   }) {
     const { email, phoneNumber, password } = payload;
-    const isExist = await User.findOne({
-      $or: [{ email }, { phone: phoneNumber }],
-    });
+
+    if (!email && !phoneNumber) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "Email or phone number is required"
+      );
+    }
+
+    // Ensure explicit query conditions to avoid unexpected matches
+    const query: Record<string, string> = {};
+    if (email) query.email = email.toLowerCase();
+    if (phoneNumber) query.phone = phoneNumber;
+
+    // Find user with strict match
+    const isExist = await User.findOne(query);
+
     if (!isExist) {
       throw new ApiError(httpStatus.BAD_REQUEST, "User Not Found");
     }
+
+    if (!isExist.password) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid user credentials");
+    }
+
     const isPasswordMatch = await encryptionOperation.comparePassword(
       password,
-      isExist.password as string
+      isExist.password
     );
 
     if (!isPasswordMatch) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Wrong credentials");
     }
+
     const accessToken = this.jwt.createToken({
       userId: isExist._id,
       role: isExist.role,
     });
+
     const refreshToken = this.jwt.createToken(
       { userId: isExist._id, role: isExist.role },
       "30d"
     );
 
-    isExist.password = undefined;
+    isExist.password = undefined; // Remove sensitive data
 
     return { accessToken, refreshToken, user: isExist };
   }
