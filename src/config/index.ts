@@ -44,4 +44,8 @@ export default {
   sms_api_password: process.env.SMS_API_PASSWORD,
   sms_api_sender_id: process.env.SMS_API_SENDER_ID,
   sms_api_type: process.env.SMS_API_TYPE,
+
+    // Google Auth Configuration
+  google_client_id: process.env.GOOGLE_CLIENT_ID,
+  google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
 };
