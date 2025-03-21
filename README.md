@@ -93,7 +93,6 @@ yarn test
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Feel free to customize the application or add additional modules as needed.
 
 sql
 Copy
