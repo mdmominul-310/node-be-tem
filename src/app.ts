@@ -11,6 +11,7 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
 import { JwtPayload } from "jsonwebtoken";
+import config from "./config";
 dotenv.config();
 
 const app: Express = express();
@@ -58,31 +59,34 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
+// Google OAuth
+if (config.google_client_id && config.google_client_secret) {
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-// Google OAuth Strategy
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: "",
-      clientSecret: "",
-      callbackURL: "http://localhost:5000/api/v1/auth/login/google/callback",
-    },
-    async (_accessToken, _refreshToken, profile: Profile, done) => {
-      return done(null, profile);
-    }
-  )
-);
+  // Google OAuth Strategy
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: "",
+        clientSecret: "",
+        callbackURL: "http://localhost:5000/api/v1/auth/login/google/callback",
+      },
+      async (_accessToken, _refreshToken, profile: Profile, done) => {
+        return done(null, profile);
+      }
+    )
+  );
 
-// Serialize & Deserialize User
-passport.serializeUser((user: JwtPayload, done) => {
-  done(null, user);
-});
+  // Serialize & Deserialize User
+  passport.serializeUser((user: JwtPayload, done) => {
+    done(null, user);
+  });
 
-passport.deserializeUser((obj: never, done) => {
-  done(null, obj);
-});
+  passport.deserializeUser((obj: never, done) => {
+    done(null, obj);
+  });
+}
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1/", MainRoutes);
