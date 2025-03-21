@@ -97,6 +97,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 sql
 Copy
 
-You can simply copy and paste this into your `README.md` file. Let me know if you need any further changes!
 
 
